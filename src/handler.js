@@ -15,12 +15,12 @@ const addBook = (request, h) => {
 
   const id = nanoid(16);
   const finished = pageCount === readPage;
-  const createdAt = new Date().toISOString();
-  const updatedAt = createdAt;
+  const insertedAt = new Date().toISOString();
+  const updatedAt = insertedAt;
 
   if (name == null || name == undefined) {
     const response = h.response({
-      status: 'Fail',
+      status: 'fail',
       message: 'Gagal menambahkan buku. Mohon isi nama buku',
     });
 
@@ -30,7 +30,7 @@ const addBook = (request, h) => {
 
   if (readPage > pageCount){
     const response = h.response({
-      status: 'Fail',
+      status: 'fail',
       message: `Gagal menambahkan buku. readPage tidak boleh lebih besar dari pageCount`,
     });
 
@@ -50,13 +50,13 @@ const addBook = (request, h) => {
     reading,
     finished,
     reading,
-    createdAt,
+    insertedAt,
     updatedAt,
   };
 
   books.push(newBooks);
 
-  const isSuccess = books.filter((buku) => buku.id === id).length > 0;
+  const isSuccess = books.filter((book) => book.id === id).length > 0;
 
   if (isSuccess) {
     const response = h.response({
@@ -84,17 +84,17 @@ const getAllBook = (request, h) => {
   const {name, reading, finished} = request.query;
 
   if (name !== undefined) {
-    const buku = books.filter(
-        (buku) => buku.name.toLowerCase().includes(name.toLowerCase()),
+    const book = books.filter(
+        (book) => book.name.toLowerCase().includes(name.toLowerCase()),
     );
 
     const response = h.response({
       status: 'success',
       data: {
-        books: buku.map((buku) => ({
-          id: buku.id,
-          name: buku.name,
-          publisher: buku.publisher,
+        books: book.map((book) => ({
+          id: book.id,
+          name: book.name,
+          publisher: book.publisher,
         }),
         ),
       },
@@ -105,17 +105,17 @@ const getAllBook = (request, h) => {
   }
 
   if (reading !== undefined) {
-    const buku = books.filter(
-        (buku) => Number(buku.reading) === Number(reading),
+    const book = books.filter(
+        (book) => Number(book.reading) === Number(reading),
     );
 
     const response = h.response({
       status: 'success',
       data: {
-        books: buku.map((buku) => ({
-          id: buku.id,
-          name: buku.name,
-          publisher: buku.publisher,
+        books: book.map((book) => ({
+          id: book.id,
+          name: book.name,
+          publisher: book.publisher,
         }),
         ),
       },
@@ -126,17 +126,17 @@ const getAllBook = (request, h) => {
   }
 
   if (finished !== undefined) {
-    const buku = books.filter(
-        (buku) => Number(buku.finished) === Number(finished),
+    const book = books.filter(
+        (book) => Number(book.finished) === Number(finished),
     );
 
     const response = h.response({
       status: 'success',
       data: {
-        books: buku.map((buku) => ({
-          id: buku.id,
-          name: buku.name,
-          publisher: buku.publisher,
+        books: book.map((book) => ({
+          id: book.id,
+          name: book.name,
+          publisher: book.publisher,
         }),
         ),
       },
@@ -149,10 +149,10 @@ const getAllBook = (request, h) => {
   const response = h.response({
     status: 'success',
     data: {
-      books: books.map((buku) => ({
-        id: buku.id,
-        name: buku.name,
-        publisher: buku.publisher,
+      books: books.map((book) => ({
+        id: book.id,
+        name: book.name,
+        publisher: book.publisher,
       }),
       ),
     },
@@ -178,7 +178,7 @@ const editBook = (request, h) => {
 
   const finished = pageCount === readPage;
   const updatedAt = new Date().toISOString();
-  const index = books.findIndex((buku) => buku.id === bookId);
+  const index = books.findIndex((book) => book.id === bookId);
 
   if (name === undefined) {
     const response = h.response({
@@ -235,13 +235,13 @@ const editBook = (request, h) => {
 
 const getByIdBook = (request, h) => {
   const {bookId} = request.params;
-  const buku = books.filter((buku) => buku.id === bookId)[0];
+  const book = books.filter((book) => book.id === bookId)[0];
 
-  if (buku !== undefined) {
+  if (book !== undefined) {
     const response = h.response({
       status: 'success',
       data: {
-        buku,
+        book,
       },
     },
     );
@@ -262,7 +262,7 @@ const getByIdBook = (request, h) => {
 
 const deleteBook = (request, h) => {
   const {bookId} = request.params;
-  const index = books.findIndex((buku) => buku.id === bookId);
+  const index = books.findIndex((book) => book.id === bookId);
 
   if (index !== -1) {
     books.splice(index, 1);
